@@ -1,31 +1,18 @@
 'use strict';
 
-const chai = require('chai');
-const expect = chai.expect;
-const sinon = require('sinon');
-chai.use(require('sinon-chai'));
-const redis = require('redis-mock');
 const request = require('supertest');
-const mockery = require('mockery');
-const upath = require('upath');
 
 let Ravel, Routes, mapping, transaction, app;
 
 describe('Ravel PostgreSQL Provider integration test', () => {
-  beforeEach((done) => {
+  beforeEach(async () => {
     process.removeAllListeners('unhandledRejection');
-    // enable mockery
-    mockery.enable({
-      useCleanCache: true,
-      warnOnReplace: false,
-      warnOnUnregistered: false
-    });
+
     // scaffold basic Ravel app
     Ravel = require('ravel');
     Routes = Ravel.Routes;
     mapping = Routes.mapping;
     transaction = Routes.transaction;
-    mockery.registerMock('redis', redis);
     app = new Ravel();
     app.set('log level', app.log.NONE);
     new (require('../lib/ravel-postgresql-provider'))(app); // eslint-disable-line new-cap, no-new
@@ -35,18 +22,13 @@ describe('Ravel PostgreSQL Provider integration test', () => {
       port: 15432
     });
     app.set('keygrip keys', ['mysecret']);
-
-    done();
   });
 
-  afterEach((done) => {
+  afterEach(async () => {
     process.removeAllListeners('unhandledRejection');
-    mockery.deregisterAll();
-    mockery.disable();
-    done();
   });
 
-  it('should provide clients with a connection to query an existing PostgreSQL database', (done) => {
+  it('should provide clients with a connection to query an existing PostgreSQL database', async () => {
     class TestRoutes extends Routes {
       constructor () {
         super('/');
@@ -66,21 +48,16 @@ describe('Ravel PostgreSQL Provider integration test', () => {
         });
       }
     }
-    mockery.registerMock(upath.join(app.cwd, 'routes'), TestRoutes);
-    app.routes('routes');
-    app.init();
+    app.load(TestRoutes);
+    await app.init();
     app.emit('pre listen');
 
-    request.agent(app.server)
+    await request.agent(app.server)
       .get('/test')
-      .expect(200, JSON.stringify({col: 1}))
-      .end((err) => {
-        app.close();
-        done(err);
-      });
+      .expect(200, JSON.stringify({col: 1}));
   });
 
-  it('should trigger a rollback when a query fails', (done) => {
+  it('should trigger a rollback when a query fails', async () => {
     let spy;
     class TestRoutes extends Routes {
       constructor () {
@@ -92,26 +69,20 @@ describe('Ravel PostgreSQL Provider integration test', () => {
       testHandler (ctx) {
         expect(ctx).to.have.a.property('transaction').that.is.an('object');
         expect(ctx.transaction).to.have.a.property('postgresql').that.is.an('object');
-        spy = sinon.spy(ctx.transaction.postgresql, 'query');
+        spy = jest.spyOn(ctx.transaction.postgresql, 'query');
         return Promise.reject(new Error());
       }
     }
-    mockery.registerMock(upath.join(app.cwd, 'routes'), TestRoutes);
-    app.routes('routes');
-    app.init();
+    app.load(TestRoutes)
+    await app.init();
     app.emit('pre listen');
 
-    request.agent(app.server)
-      .get('/test')
-      .end((err) => {
-        try {
-          expect(spy).to.have.been.called;
-          done(err);
-        } catch (e) {
-          done(e);
-        } finally {
-          app.close();
-        }
-      });
+    try {
+      await request.agent(app.server)
+        .get('/test');
+      expect(spy).toHaveBeenCalled();
+    } finally {
+      await app.close();
+    }
   });
 });

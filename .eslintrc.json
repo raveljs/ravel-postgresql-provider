@@ -1,20 +1,23 @@
 {
   "plugins": ["jsdoc"],
-  "env": {
-    "node": true,
-    "builtin": true,
-    "es6": true
-  },
   "parser": "babel-eslint",
   "extends": "semistandard",
-  "globals": {},
+  "globals": {
+    "Ravel":       true,
+    "Primus":      true,
+    "constructor": false,
+    "require":     false,
+    "module":      false
+  },
   "rules": {
-    "max-len":  [2, 200, 2],
+    "no-var": "error",
+    "prefer-const": "error",
+    "max-len":  [2, 120, 2],
     "jsdoc/check-param-names": 1,
     "jsdoc/check-tag-names": 1,
     "jsdoc/check-types": 1,
     "jsdoc/newline-after-description": 1,
-    "jsdoc/require-description-complete-sentence": 1,
+    "jsdoc/require-description-complete-sentence": 0, // buggy
     "jsdoc/require-hyphen-before-param-description": 1,
     "jsdoc/require-param": 1,
     "jsdoc/require-param-description": 1,

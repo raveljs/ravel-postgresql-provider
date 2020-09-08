@@ -8,14 +8,15 @@
     "afterEach":  false,
     "it":         false,
     "require":    false,
-    "module":     false
+    "module":     false,
+    "jest":       false,
+    "request":    false,
+    "upath":      false
   },
   "env": {
-    "mocha": true
+    "jest": true
   },
-  "rules":  {
-    "strict": 0,
-    "no-unused-vars": 1,
+  "rules": {
     "no-unused-expressions": "off"
   }
 }
