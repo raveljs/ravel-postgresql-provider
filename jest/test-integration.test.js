@@ -14,7 +14,7 @@ describe('Ravel PostgreSQL Provider integration test', () => {
     mapping = Routes.mapping;
     transaction = Routes.transaction;
     app = new Ravel();
-    app.set('log level', app.log.NONE);
+    app.set('log level', app.$log.NONE);
     new (require('../lib/ravel-postgresql-provider'))(app); // eslint-disable-line new-cap, no-new
     app.set('postgresql options', {
       user: 'ravel',
@@ -29,11 +29,8 @@ describe('Ravel PostgreSQL Provider integration test', () => {
   });
 
   it('should provide clients with a connection to query an existing PostgreSQL database', async () => {
-    class TestRoutes extends Routes {
-      constructor () {
-        super('/');
-      }
-
+    @Routes('/')
+    class TestRoutes {
       @transaction
       @mapping(Routes.GET, 'test')
       testHandler (ctx) {
@@ -59,11 +56,8 @@ describe('Ravel PostgreSQL Provider integration test', () => {
 
   it('should trigger a rollback when a query fails', async () => {
     let spy;
-    class TestRoutes extends Routes {
-      constructor () {
-        super('/');
-      }
-
+    @Routes('/')
+    class TestRoutes {
       @transaction
       @mapping(Routes.GET, 'test')
       testHandler (ctx) {

@@ -9,7 +9,7 @@ describe('Ravel PostgreSQL Provider', async () => {
     Ravel = require('ravel');
     app = new Ravel();
     // app.set('log level', app.log.NONE);  this won't work because app.init() is never called in these tests
-    app.log.setLevel(app.log.NONE);
+    app.set('log level', app.$log.NONE);
     app.set('keygrip keys', ['mysecret']);
   });
 
@@ -28,13 +28,13 @@ describe('Ravel PostgreSQL Provider', async () => {
       await app.init();
 
       provider.prelisten(app);
-      expect(provider.pool).toBe('object');
+      expect(typeof provider.pool).toBe('object');
       expect(provider.pool).toHaveProperty('acquire');
-      expect(provider.pool.acquire).toBe('function');
+      expect(typeof provider.pool.acquire).toBe('function');
       expect(provider.pool).toHaveProperty('release');
-      expect(provider.pool.release).toBe('function');
+      expect(typeof provider.pool.release).toBe('function');
       expect(provider.pool).toHaveProperty('destroy');
-      expect(provider.pool.destroy).toBe('function');
+      expect(typeof provider.pool.destroy).toBe('function');
       await app.close();
     });
 
@@ -148,7 +148,7 @@ describe('Ravel PostgreSQL Provider', async () => {
       provider.prelisten(app);
       const conn = await provider.getTransactionConnection();
       expect(conn).toHaveProperty('query');
-      expect(conn.query).toBe('function');
+      expect(typeof conn.query).toBe('function');
       provider.release(conn);
       provider.end();
       await app.close();
@@ -188,7 +188,7 @@ describe('Ravel PostgreSQL Provider', async () => {
       const postgresql = {
         createConnection: () => conn
       };
-      jest.doMock('postgresql', postgresql);
+      jest.doMock('pg', postgresql);
 
       const provider = new (require('../lib/ravel-postgresql-provider'))(app);
       provider.pool = {
