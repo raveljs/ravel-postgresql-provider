@@ -8,7 +8,8 @@ const addListener = function (type) {
   const max = typeof this._maxListeners === 'number' ? this._maxListeners : 10;
 
   if (max !== 0 && numListeners > max) {
-    const error = new Error('Too many listeners of type "' + type + '" added to EventEmitter. Max is ' + max + " and we've added " + numListeners + '.');
+    const error = new Error(`Too many listeners of type "${type}" added to EventEmitter.
+      Max is ${max} and we've added ${numListeners}.`);
     throw error;
   }
 

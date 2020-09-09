@@ -54,7 +54,7 @@ describe('Ravel PostgreSQL Provider integration test', () => {
 
     await request.agent(app.server)
       .get('/test')
-      .expect(200, JSON.stringify({col: 1}));
+      .expect(200, JSON.stringify({ col: 1 }));
   });
 
   it('should trigger a rollback when a query fails', async () => {
@@ -73,7 +73,7 @@ describe('Ravel PostgreSQL Provider integration test', () => {
         return Promise.reject(new Error());
       }
     }
-    app.load(TestRoutes)
+    app.load(TestRoutes);
     await app.init();
     app.emit('pre listen');
 

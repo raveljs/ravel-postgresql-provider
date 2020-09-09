@@ -17,6 +17,7 @@
     "jest": true
   },
   "rules": {
-    "no-unused-expressions": "off"
+    "no-unused-expressions": "off",
+    "max-len": ["error", 256, 2]
   }
 }

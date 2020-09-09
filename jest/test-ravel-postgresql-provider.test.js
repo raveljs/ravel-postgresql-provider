@@ -149,7 +149,7 @@ describe('Ravel PostgreSQL Provider', async () => {
       const conn = await provider.getTransactionConnection();
       expect(conn).toHaveProperty('query');
       expect(conn.query).toBe('function');
-      provider.release(c);
+      provider.release(conn);
       provider.end();
       await app.close();
     });
@@ -202,7 +202,7 @@ describe('Ravel PostgreSQL Provider', async () => {
   });
 
   describe('#exitTransaction()', async () => {
-    var provider, connection;
+    let provider, connection;
 
     beforeEach(async () => {
       connection = {
@@ -286,7 +286,7 @@ describe('Ravel PostgreSQL Provider', async () => {
     it('should call rollback on the connection, destroy it and reject when shouldCommit is false and a fatal rollback error occurred', async () => {
       const fatalErr = new Error();
       fatalErr.fatal = true;
-      connection.rollBack = jest.fn((cb) => cb(rollbackErr));
+      connection.rollBack = jest.fn((cb) => cb(fatalErr));
       const destroySpy = jest.spyOn(provider.pool, 'destroy');
 
       await expect(provider.exitTransaction(connection, false)).rejects.toThrow(fatalErr);
