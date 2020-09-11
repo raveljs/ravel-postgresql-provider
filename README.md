@@ -80,7 +80,7 @@ class Posts extends Module {
 
 ### Step 4: Configuration
 
-Requiring the `ravel-postgresql-provider` module will register a configuration parameter with Ravel which must be supplied via `.ravelrc` or `app.set()`:
+Requiring the `ravel-postgresql-provider` module will register a configuration parameter with Ravel which must be supplied via `.ravelrc` or `app.set()`. This configuration parameter matches the format defined by `pg` for [Pools](https://node-postgres.com/api/pool):
 
 *.ravelrc*
 ```json
@@ -91,9 +91,9 @@ Requiring the `ravel-postgresql-provider` module will register a configuration p
     "user": "my_user",
     "password": "a password",
     "database": "my_database",
-    "acquireTimeoutMillis": 5000,
+    "connectionTimeoutMillis": 5000,
     "idleTimeoutMillis": 5000,
-    "connectionLimit": 10
+    "max": 10
   }
 }
 ```
@@ -126,8 +126,9 @@ app.init();
     "user": "ravel",
     "password": "a password",
     "database": "myfirstdatabase",
+    "connectionTimeoutMillis": 5000,
     "idleTimeoutMillis": 5000,
-    "connectionLimit": 10
+    "max": 10
   },
   "second postgresql options": {
     "host": "localhost",
@@ -135,8 +136,9 @@ app.init();
     "user": "ravel",
     "password": "another password",
     "database": "myseconddatabase",
+    "connectionTimeoutMillis": 5000,
     "idleTimeoutMillis": 5000,
-    "connectionLimit": 10
+    "max": 10
   }
 }
 ```
