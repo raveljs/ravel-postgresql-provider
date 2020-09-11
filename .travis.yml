@@ -1,23 +1,18 @@
 language: node_js
 sudo: required
+dist: focal
 services:
   - docker
-env:
-  - CXX=g++-4.8
-addons:
-  apt:
-    sources:
-    - ubuntu-toolchain-r-test
-    packages:
-    - g++-4.8
 node_js:
-  - "7"
-  - "8"
+  - "10"
+  - "12"
 before_install:
-  - docker run --name ravel-postgres-test -d -e POSTGRES_USER=ravel -e POSTGRES_PASSWORD=password -p 15432:5432 postgres:10.0-alpine
+  - curl -L https://codeclimate.com/downloads/test-reporter/test-reporter-latest-linux-amd64 > ./cc-test-reporter
+  - chmod +x ./cc-test-reporter
+  - ./cc-test-reporter before-build
+  - docker run --name ravel-postgres-test -d -e POSTGRES_USER=ravel -e POSTGRES_PASSWORD=password -p 15432:5432 postgres:12.4-alpine
   - docker ps -a
-  - $CXX --version
   - npm install
 after_script:
-  - codeclimate-test-reporter < reports/lcov.info
+  - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
   - docker rm -fv ravel-postgres-test

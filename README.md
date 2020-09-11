@@ -2,7 +2,7 @@
 
 > Ravel DatabaseProvider for postgresql
 
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/raveljs/ravel-postgresql-provider/master/LICENSE) [![npm version](https://badge.fury.io/js/ravel-postgresql-provider.svg)](http://badge.fury.io/js/ravel-postgresql-provider) [![Dependency Status](https://david-dm.org/raveljs/ravel-postgresql-provider.svg)](https://david-dm.org/raveljs/ravel-postgresql-provider) [![npm](https://img.shields.io/npm/dm/ravel.svg?maxAge=2592000)](https://www.npmjs.com/package/ravel) [![Build Status](https://travis-ci.org/raveljs/ravel-postgresql-provider.svg?branch=master)](https://travis-ci.org/raveljs/ravel-postgresql-provider) [![Code Climate](https://codeclimate.com/github/raveljs/ravel-postgresql-provider/badges/gpa.svg)](https://codeclimate.com/github/raveljs/ravel-postgresql-provider) [![Test Coverage](https://codeclimate.com/github/raveljs/ravel-postgresql-provider/badges/coverage.svg)](https://codeclimate.com/github/raveljs/ravel-postgresql-provider/coverage)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/raveljs/ravel-postgresql-provider/master/LICENSE) [![npm version](https://badge.fury.io/js/ravel-postgresql-provider.svg)](http://badge.fury.io/js/ravel-postgresql-provider) [![Dependency Status](https://david-dm.org/raveljs/ravel-postgresql-provider.svg)](https://david-dm.org/raveljs/ravel-postgresql-provider) [![npm](https://img.shields.io/npm/dm/ravel.svg?maxAge=2592000)](https://www.npmjs.com/package/ravel) [![Build Status](https://travis-ci.org/raveljs/ravel-postgresql-provider.svg?branch=master)](https://travis-ci.org/raveljs/ravel-postgresql-provider) [![Test Coverage](https://codeclimate.com/github/raveljs/ravel-postgresql-provider/badges/coverage.svg)](https://codeclimate.com/github/raveljs/ravel-postgresql-provider/coverage)
 
 `ravel-postgresql-provider` is a `DatabaseProvider` for Ravel, wrapping the powerful node [postgresql](https://github.com/postgresqljs/postgresql) library. It supports connection pooling as well as Ravel's [transaction system](http://raveljs.github.io/docs/latest/db/decorators/transaction.js.html) (including rollbacks).
 
@@ -80,7 +80,7 @@ class Posts extends Module {
 
 ### Step 4: Configuration
 
-Requiring the `ravel-postgresql-provider` module will register a configuration parameter with Ravel which must be supplied via `.ravelrc` or `app.set()`:
+Requiring the `ravel-postgresql-provider` module will register a configuration parameter with Ravel which must be supplied via `.ravelrc` or `app.set()`. This configuration parameter matches the format defined by `pg` for [Pools](https://node-postgres.com/api/pool):
 
 *.ravelrc*
 ```json
@@ -91,9 +91,9 @@ Requiring the `ravel-postgresql-provider` module will register a configuration p
     "user": "my_user",
     "password": "a password",
     "database": "my_database",
-    "acquireTimeoutMillis": 5000,
+    "connectionTimeoutMillis": 5000,
     "idleTimeoutMillis": 5000,
-    "connectionLimit": 10
+    "max": 10
   }
 }
 ```
@@ -126,8 +126,9 @@ app.init();
     "user": "ravel",
     "password": "a password",
     "database": "myfirstdatabase",
+    "connectionTimeoutMillis": 5000,
     "idleTimeoutMillis": 5000,
-    "connectionLimit": 10
+    "max": 10
   },
   "second postgresql options": {
     "host": "localhost",
@@ -135,8 +136,9 @@ app.init();
     "user": "ravel",
     "password": "another password",
     "database": "myseconddatabase",
+    "connectionTimeoutMillis": 5000,
     "idleTimeoutMillis": 5000,
-    "connectionLimit": 10
+    "max": 10
   }
 }
 ```

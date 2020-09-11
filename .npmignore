@@ -1,5 +1,5 @@
 /test
-.babelrc
+babel.config.js
 .codeclimate.yml
 .editorconfig
 .eslintrc.json
