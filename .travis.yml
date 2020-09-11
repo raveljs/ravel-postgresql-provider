@@ -12,7 +12,6 @@ before_install:
   - ./cc-test-reporter before-build
   - docker run --name ravel-postgres-test -d -e POSTGRES_USER=ravel -e POSTGRES_PASSWORD=password -p 15432:5432 postgres:12.4-alpine
   - docker ps -a
-  - $CXX --version
   - npm install
 after_script:
   - ./cc-test-reporter after-build --exit-code $TRAVIS_TEST_RESULT
